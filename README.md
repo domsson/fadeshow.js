@@ -104,10 +104,11 @@ a new `Fadeshow` instance. Possible properties are as follows:
 | `prev()`   | Show the previous slide |
 | `kill()`   | Undo the changes performed by `init()` |
 
-When you call `kill()` on an instance, it will remember the options you 
-have set, as well as the container element it was originally attached to. 
-This way, you can call `init()` again to re-initialize a fadeshow at any 
-point in time. If you ever need to dynamically add or remove a slide from 
-a fadeshow, you could call `kill()` and `init()` to make sure the new or 
-removed slides are recognized correctly.
+When you call `kill()` on an instance, it will remember the container element 
+it was originally attached to. This way, you can call `init()` again to 
+re-initialize a fadeshow at any point in time. If you ever need to dynamically 
+add or remove a slide from a fadeshow, you could call `kill()` and `init()` to 
+make sure the new or removed slides are recognized correctly. Note, however, 
+that when calling `init()`, you should pass in the same options as on the first 
+call, otherwise all options will be reset to their defaults. 
 
