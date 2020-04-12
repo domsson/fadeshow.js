@@ -79,7 +79,7 @@ a new `Fadeshow` instance. Possible properties are as follows:
 | `attr`          | `"data-fadeshow"`   | Attribute of the slideshow's container element |
 | `name`          | `null`              | Value for the `attr` attribute; useful to differentiate multiple instances |
 | `slider_class`  | `"fadeshow"`        | CSS class to set on the container element |
-| `slide_sel`     | null                | CSS selector for the slides within the container |
+| `slide_sel`     | `null`              | CSS selector for the slides within the container |
 | `slide_class`   | `"fadeshow-slide"`  | CSS class to set on all slides |
 | `slide_active`  | `"active"`          | CSS class to set on active slides |
 | `slide_hidden`  | `"hidden"`          | CSS class to set on hidden slides |
