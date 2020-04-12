@@ -82,7 +82,7 @@ a new `Fadeshow` instance. Possible properties are as follows:
 | `nav_class`     | `"fadeshow-nav"`    | CSS class to set on the slider navigation |
 | `button_class`  | `"fadeshow-button"` | CSS class to set on the slider navigation buttons |
 | `button_active` | `"active"`          | CSS class to set on active slider navigation buttons |
-| `duration`      | `5`                 | Duration, in seconds, that a slide will be shown |
+| `duration`      | `5`                 | Seconds between slide changes; `0` means no automatic slide changes |
 | `add_nav`       | `false`             | Add a slider navigation? |
 
 ### Example
