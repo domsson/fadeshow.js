@@ -28,7 +28,7 @@ Check the included HTML file for an example.
   
 ### Markup example
 
-This is an example for markup that `tabs.js` can work with:
+This is an example for markup that `fadeshow.js` can work with:
 
 	<div data-fadeshow="">
 		<img src="foo.jpg">
