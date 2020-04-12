@@ -45,7 +45,7 @@ Once `fadeshow.js` has processed the above, it would look like this:
 	</div>
 
 Optionally, `fadeshow.js` can add a navigation (`ul`) to your container, 
-so that users can see how many slides there are switch to them directly.
+so that users can see how many slides there are and switch to them directly.
 
 ## Usage
 
@@ -59,8 +59,8 @@ Create a `Fadeshow` instance once the DOM has loaded. For example:
 	window.onload = setupFadeshow;
 	
 Once `fadeshow.js` has finished initialization, it will have added the 
-`data-fadeshow-set` attribute on the element that has the `data-fadeshow` 
-attribute set. If you pass in a custom attribute, that will be used instead.
+`data-fadeshow-set` attribute on the slideshow's container element. If you 
+pass in a custom attribute, that will be used instead.
  
 If you have multiple fadeshows on your page, create one `Fadeshow` instance 
 for each of them. This can be done in a loop.
@@ -72,8 +72,8 @@ a new `Fadeshow` instance. Possible properties are as follows:
 
 | Name            | Default             | Description |
 |-----------------|---------------------|-------------|
-| `attr`          | `"data-fadeshow"`   | Attribute of the tab navigation element |
-| `name`          | `null`              | Attribute value of the tab navigation element; useful to differentiate multiple instances |
+| `attr`          | `"data-fadeshow"`   | Attribute of the slideshow's container element |
+| `name`          | `null`              | Value for the `attr` attribute; useful to differentiate multiple instances |
 | `slider_class`  | `"fadeshow"`        | CSS class to set on the container element |
 | `slide_sel`     | null                | CSS selector for the slides within the container |
 | `slide_class`   | `"fadeshow-slide"`  | CSS class to set on all slides |
