@@ -2,8 +2,6 @@
 
 Turn a set of regular elements into a simple fading slideshow. 
 
-![picture](example.png)
-
 No actual visual changes will be performed, `fadeshow.js` just adds/removes 
 CSS classes to the relevant elements, enabling you to apply styles that will 
 then take care of doing the actual fading. But don't worry, its quite simple. 
