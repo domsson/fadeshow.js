@@ -20,6 +20,12 @@ Check the included HTML file for an example.
 - Easy to use, flexible in how to use
 - Can be configured to some degree
 
+## How it operates
+
+- Changes slide's classes in a set interval (can be turned off)
+- Cycles (goes back to the first slide after the last was shown)
+- Can optionally add numbered navigation buttons (one per slide)
+
 ## Markup requirements
 
 1. Set the `data-fadeshow` attribute on your container element
