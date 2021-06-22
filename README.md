@@ -18,6 +18,10 @@ Check the included CSS file for inspiration.
 - Easy to use, flexible in how to use
 - Can be configured to some degree
 
+## Limitations
+
+- No support for Internet Explorer or other outdates browsers
+
 ## How it operates
 
 - Changes slide's classes in a set interval (can be turned off)

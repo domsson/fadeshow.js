@@ -2,19 +2,22 @@ class Fadeshow
 {
 	constructor(o)
 	{
-		// options
-		this.attr          = this.get_opt(o, "attribute", "data-fadeshow");
-		this.name          = this.get_opt(o, "name", null);
-		this.slider_class  = this.get_opt(o, "slider_class", "fadeshow");
-		this.slide_sel     = this.get_opt(o, "slide_selector", null);
-		this.slide_class   = this.get_opt(o, "slide_class", "fadeshow-slide");
-		this.slide_active  = this.get_opt(o, "slide_active", "active");
-		this.slide_hidden  = this.get_opt(o, "slide_hidden", "hidden");
-		this.nav_class     = this.get_opt(o, "nav_class", "fadeshow-nav");
-		this.button_class  = this.get_opt(o, "button_class", "fadeshow-button");
-		this.button_active = this.get_opt(o, "button_active", "active");
-		this.duration      = this.get_opt(o, "duration", 5);
-		this.add_nav       = this.get_opt(o, "add_nav", false);
+		// options (defaults)
+		this.attr          = "data-fadeshow";
+		this.name          = null;
+		this.slider_class  = "fadeshow";
+		this.slide_sel     = null;
+		this.slide_class   = "fadeshow-slide";
+		this.slide_active  = "active";
+		this.slide_hidden  = "hidden";
+		this.nav_class     = "fadeshow-nav";
+		this.button_class  = "fadeshow-button";
+		this.button_active = "active";
+		this.duration      = 5;
+		this.add_nav       = false;
+
+		// copy over user provided options
+		Object.assign(this, o);
 
 		// state
 		this.slider  = null;
@@ -28,11 +31,6 @@ class Fadeshow
 		this.hover_handler = null;
 	}
 
-	get_opt(o, p, d)
-	{
-		return o && o.hasOwnProperty(p) ? o[p] : d;
-	}
-	
 	/*
 	 * Add the given CSS class to the given element. If the given class is falsy 
 	 * (for example `null` or an empty string), this function does nothing.
@@ -51,24 +49,12 @@ class Fadeshow
 		e && c && e.classList.remove(c);
 	}
 	
-	button(evt)
-	{
-		let i = parseInt(evt.currentTarget.getAttribute("data-slide-idx"));
-		return (i == this.current) || this.show(i);
-	}
 	
 	init()
 	{
-		if (!this.slider)
-		{
-			this.slider = this.find_by_attr(this.attr, this.name);
-		}
-		if (!this.slider) return false;
-
-		this.add_class(this.slider, this.slider_class);
+		if (!(this.slider = this.find_slider())) return false;
 	
-		let slides = this.find_slides();
-		for (let slide of slides)
+		for (let slide of this.find_slides())
 		{
 			this.add_class(slide, this.slide_class);
 			this.slides.push(slide);
@@ -76,10 +62,7 @@ class Fadeshow
 	
 		if (!this.slides.length) return false;
 	
-		if (this.add_nav)
-		{
-			this.make_nav();
-		}
+		if (this.add_nav) this.make_nav();
 	
 		this.hide_all();
 		this.show(this.current = 0);
@@ -90,27 +73,36 @@ class Fadeshow
 	
 		if (this.duration)
 		{
-			let next_handler = this.on_timer.bind(this);
-			this.timer = window.setInterval(next_handler, this.duration * 1000);
+			this.timer = window.setInterval(this.on_timer.bind(this), this.duration * 1000);
 		}
 	
+		this.add_class(this.slider, this.slider_class);
 		this.slider.setAttribute(this.attr + "-set", "");
+		return true;
 	}
 	
-	find_by_attr(name, value)
+	/*
+	 * Find the slider element according to `this.attr` and `this.name`.
+	 * If `this.slide` is already set, no search performed and that element
+	 * is returned instead. If no slider can be found, null is returned.
+	 */
+	find_slider()
 	{
-		let q = `[${name}="${value ? value : ""}"]`;
-		let matches = document.querySelectorAll(q);
-		for (let i = 0; i < matches.length; ++i)
+		if (this.slider) return this.slider; // slider already set
+
+		let q = `[${this.attr}="${this.name ? this.name : ''}"]`;
+		let sliders = document.querySelectorAll(q);
+		for (let slider of sliders)
 		{
-			if (!matches[i].hasAttribute(name + "-set"))
-			{
-				return matches[i];
-			}		
+			if (!slider.hasAttribute(this.attr + "-set")) return slider;
 		}
 		return null;
 	}
 	
+	/*
+	 * Find all elements within `this.slider` that match `this.slide_sel`
+	 * or, if that isn't set, return all child elements of `this.slider`.
+	 */
 	find_slides()
 	{
 		return this.slide_sel ?
@@ -122,7 +114,7 @@ class Fadeshow
 	{
 		let nav = document.createElement("ul");
 		nav.classList.add(this.nav_class);
-		let handler = this.button.bind(this);	
+		let handler = this.on_button.bind(this);	
 	
 		for (let i = 0; i < this.slides.length; ++i)
 		{
@@ -139,30 +131,57 @@ class Fadeshow
 		this.slider.appendChild(nav);
 		this.nav = nav;
 	}
-	
+
+	/*
+	 * Event handler for when a slide nav button has been pressed.
+	 * Looks up the corresponding slide and shows it.
+	 */
+	on_button(evt)
+	{
+		let i = parseInt(evt.currentTarget.getAttribute("data-slide-idx"));
+		(i == this.current) || this.show(i);
+	}
+
+	/*
+	 * Event handler for when the a mouse hover event occurs.
+	 * If the mouse is hovering over the slider, we pause the slideshow.
+	 */
 	on_hover(evt)
 	{
 		if (evt.currentTarget != this.slider) return;
 		this.paused = (event.type == "mouseover");
 	}
 	
+	/*
+	 * Event handler for a timer event, which we use to automatically 
+	 * progress to the next slide after a certain amount of time.
+	 */ 
 	on_timer(evt)
 	{
 		return this.paused || this.next();
 	}
 	
+	/*
+	 * Shows the previous slide.
+	 */
 	prev()
 	{
 		let prev = this.current == 0 ? this.slides.length - 1 : this.current - 1;
 		return this.show(prev);
 	}
 	
+	/*
+	 * Shows the next slide.
+	 */
 	next()
 	{
 		let next = (this.current == this.slides.length - 1) ? 0 : this.current + 1;
 		return this.show(next);
 	}
 	
+	/*
+	 * Shows the slide at position `idx`.
+	 */
 	show(idx)
 	{
 		if (this.sliding) return false;
@@ -189,10 +208,7 @@ class Fadeshow
 	
 	hide_all()
 	{
-		for (let i = 0; i < this.slides.length; ++i)
-		{
-			this.hide(i);
-		}
+		for (let i = 0; i < this.slides.length; ++i) this.hide(i);
 	}
 	
 	kill()
